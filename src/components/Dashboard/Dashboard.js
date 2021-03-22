@@ -1,23 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getPhoto, getComments, addComment } from "../../store/actions/actions";
+import { getPhoto } from "../../store/actions/actions";
+import { Link } from 'react-router-dom';
+
 
 const Dashboard = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getPhoto());
-    dispatch(getComments());
   }, []);
 
   const photoDetails = useSelector((state) => state.photosReducer.data);
-  const comments = useSelector((state) => state.commentsReducer.data);
-
-  const [newComment, setNewComment] = useState({});
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    dispatch(addComment(newComment));
-  };
 
   const onClickHandler = (event) =>{
     console.log(event)
@@ -49,30 +42,19 @@ const Dashboard = () => {
       </div>
 
       <div className="profile">
-        { photoDetails && photoDetails.map(item => (
-        <>
-          <p className="photo-info">{item.title}</p>
-          <img src={item.thumbnailUrl} alt="images" width="100%" onClick={ (event) => onClickHandler (event)}  key={item.id}/>
-        </>
-        ))}
-
-        {comments.length > 0 &&
-          comments.map((comment) => (
+        
+          { photoDetails && photoDetails.map(item => (
             <>
-              <p className="photo-info">
-                <span>{comment.name}</span> - {comment.body}
-              </p>
+              <p className="photo-info">{item.id}</p>
+              <Link to="/comments" >
+                <img src={item.thumbnailUrl} alt="images" width="100%" onClick={ (event) => onClickHandler (event)}  key={item.id}/>
+              </Link>
             </>
           ))}
-        <form onSubmit={handleSubmit}>
-          <input
-            onChange={(event) =>
-              setNewComment({ name: "Isim", body: event.target.value })
-            }
-            value={newComment.body}
-          />
-          <button type="submit">Add new comment</button>
-        </form>
+          
+        
+        
+        
       </div>
 
       <div className="navbar2">
